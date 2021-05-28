@@ -2,15 +2,17 @@ require 'selenium-webdriver'
 require 'pry'
 
 class Translate
-    Selenium::WebDriver::Chrome::Service.driver_path="C:/Ruby27-x64/bin/chromedriver.exe"
-    @driver = Selenium::WebDriver.for :chrome
-    @driver.get 'https://dictionary.cambridge.org/pt/'
+    def self.connect
+        Selenium::WebDriver::Chrome::Service.driver_path="C:/Ruby27-x64/bin/chromedriver.exe"
+        @driver = Selenium::WebDriver.for :chrome
+        @driver.get 'https://dictionary.cambridge.org/pt/'
+    end
 
     def self.close_terms
         btn_acccept = @driver.find_elements(:id, 'onetrust-accept-btn-handler')[0]
         btn_acccept.click
     end
-
+    connect
     close_terms
 
     def self.search_word word
@@ -36,4 +38,17 @@ class Translate
     end
 end
 
-Translate.print_result 'hello'
+class File
+    def self.read_file document
+        words = []
+        file = File.readlines(document, chomp: true)
+        file.each do |line|
+            words.push(line)
+        end
+        words
+    end
+end
+
+words = File.read_file 'words_to_translate.txt'
+
+# Translate.print_result 'hello'
